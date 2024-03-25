@@ -38,17 +38,11 @@ data class RestaurantDto(
 )
 
 fun RestaurantDto.toRestaurant(): Restaurant {
-
-    val image = if (categories.isNotEmpty()) {
-        val icon = categories.first().iconDto
-        icon?.prefix+""+icon?.suffix
-    } else {
-        null
-    }
     val address = location?.formattedAddress
     return Restaurant(
+        id = fsqId,
         name = name,
-        image = image,
+        image = null, // set null
         address = address,
         status = closedBucket
     )

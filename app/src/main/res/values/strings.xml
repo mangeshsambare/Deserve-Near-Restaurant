@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Deserve -Near Restaurant</string>
+    <string name="restaurants">Near By Restaurants</string>
+    <string name="api_key">Api key</string>
+    <string name="log_in">Log In</string>
+    <string name="api_key_invalid">API key is invalid</string>
+    <string name="location_not_found">Location not found, check location permission from settings</string>
+    <string name="log_in_progress">Log In …</string>
+    <string name="loading">Loading …</string>
+    <string name="ok">Okay</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="error">Error!!</string>
+    <string name="unknown_error">unknown Error</string>
 </resources>

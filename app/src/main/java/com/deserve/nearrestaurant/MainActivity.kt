@@ -11,11 +11,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.deserve.nearrestaurant.ui.Screen
+import com.deserve.nearrestaurant.ui.screen.LogInScreen
 import com.deserve.nearrestaurant.ui.screen.RestaurantsScreen
 import com.deserve.nearrestaurant.ui.theme.DeserveNearRestaurantTheme
 import com.deserve.nearrestaurant.util.AppPermissionUtil
@@ -24,17 +26,45 @@ import com.deserve.nearrestaurant.util.LocationUtil
 
 class MainActivity : ComponentActivity(), LocationObservable {
     private lateinit var viewModel: RestaurantViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[RestaurantViewModel::class.java]
         setContent {
-            DeserveNearRestaurantTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.LogIn.route
+            ) {
+                composable(
+                    route = Screen.LogIn.route
                 ) {
-                    RestaurantsScreen(restaurantViewModel = viewModel)
+                    DeserveNearRestaurantTheme {
+                        // A surface container using the 'background' color from the theme
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
+                        ) {
+                            LogInScreen(viewModel = viewModel, logIn = {
+                                viewModel.updateApiKey(it)
+                                navController.navigate(Screen.Restaurant.route)
+                            })
+                        }
+                    }
+                }
+                composable(route = Screen.Restaurant.route) {
+                    DeserveNearRestaurantTheme {
+                        // A surface container using the 'background' color from the theme
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
+                        ) {
+                            RestaurantsScreen(
+                                restaurantViewModel = viewModel,
+                                navController = navController
+                                )
+                        }
+                    }
                 }
             }
         }
@@ -102,7 +132,7 @@ class MainActivity : ComponentActivity(), LocationObservable {
 
     override fun onLocationChange(location: Location?) {
         location?.let {
-            viewModel.findRestaurant(it.latitude.toString(), it.longitude.toString())
+            viewModel.updateLocation(location)
         }
     }
 
@@ -120,21 +150,5 @@ class MainActivity : ComponentActivity(), LocationObservable {
     private fun stopLocationUpdate() {
         LocationUtil.removeObservable(this)
         LocationUtil.stopLocation(this)
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DeserveNearRestaurantTheme {
-        Greeting("Android")
     }
 }

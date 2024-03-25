@@ -4,8 +4,6 @@ import android.app.Application
 
 class DeserveApplication: Application() {
 
-
-
     override fun onCreate() {
         super.onCreate()
 

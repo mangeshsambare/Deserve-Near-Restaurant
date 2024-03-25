@@ -10,5 +10,13 @@ data class IconDto(
 
     @SerializedName("suffix")
     @Expose
-    var suffix : String? = null
+    var suffix : String? = null,
+
+    @SerializedName("width")
+    @Expose
+    val width: Int? = 0,
+
+    @SerializedName("height")
+    @Expose
+    val height: Int? = 0
 )

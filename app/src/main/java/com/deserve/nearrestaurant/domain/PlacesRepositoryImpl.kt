@@ -7,4 +7,9 @@ interface PlacesRepositoryImpl {
         longitude: String,
         apiKey: String
     ): List<RestaurantDto>
+
+    suspend fun getRestaurantImage(
+        apiKey: String,
+        id: String
+    ): String?
 }

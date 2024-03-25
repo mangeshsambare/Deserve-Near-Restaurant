@@ -3,7 +3,7 @@ package com.deserve.nearrestaurant.domain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class NearByRestaurantsUseCase {
+class GetNearByRestaurantsUseCase {
     private val placesRepository = PlacesRepository()
 
     operator fun invoke(
@@ -23,7 +23,14 @@ class NearByRestaurantsUseCase {
             }
             emit(Resource.Success(restaurantList))
         } catch (e: Exception) {
-            emit(Resource.Error(e.localizedMessage ?: "Error"))
+            if (e is AppException.BadRequestException) {
+                emit(Resource.Error(AppErrors.AppException("please check URl")))
+            } else if (e is AppException.InvalidAuthException) {
+                emit(Resource.Error(AppErrors.InvalidApiKey))
+            } else {
+                emit(Resource.Error(AppErrors.AppException(e.message ?: "Exception")))
+            }
+
         }
     }
 }
